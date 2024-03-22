@@ -18,7 +18,13 @@ struct schooltype {
     int ngrad;                      // number of school data
 };
 
+class threeTwoTree {
+	
+	struct nodeType {
 
+    };
+    
+}; // ¤G¤T¾ð 
 
 class AVLTree {
     struct nodeType {
