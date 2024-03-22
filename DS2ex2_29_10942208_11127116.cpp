@@ -32,6 +32,7 @@ class AVLTree {
     nodeType *root;
     void clearNode(nodeType* node);
     int getHeight ( nodeType* node ) ;
+    int balanceFactor( nodeType* cur );
 
 public:
     AVLTree() : root(NULL) {}   // constructor of an empty tree
@@ -140,9 +141,15 @@ nodeType* AVLTree :: intsertAVL( nodeType* cur, schooltype newNode ) {
         cur->height = lHeight+1;
     else
         cur->height = rHeight+1;
-    
+
+    int balanceF = balanceFactor(cur);
+
 
     return cur;
+}
+
+int AVLTree ::balanceFactor(nodeType* cur) {
+    
 }
 
 int AVLTree :: getHeight ( nodeType* node ) {
