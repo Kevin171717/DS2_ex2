@@ -18,30 +18,48 @@ struct schooltype {
     int ngrad;                      // number of school data
 };
 
+
+
+class AVLTree {
+    struct nodeType {
+        vector <schooltype> key;                  // search key
+        nodeType *lchild = NULL;     // left child
+        nodeType *rchild = NULL;     // right child
+    };
+
+    nodeType *root;
+    void clearNode(nodeType* node);
+
+public:
+    AVLTree() : root(NULL) {}   // constructor of an empty tree
+    nodeType* getRoot (){
+        return root;
+    }
+    void intsertAVL( nodeType* cur ,schooltype allR );
+
+    void clearUp() {                    // cut off the entire tree
+        clearNode(root);
+        root = NULL;
+    } // end clearUp
+
+    ~AVLTree() { clearUp(); }
+};
+
 class schoolList {
     vector<schooltype> allR;                      // set of data records
+    AVLTree theAVLTree;
 
-
-    //************************************************//
-// the above are private data members
-//************************************************//
-
-
-    void reset();               // declaration: initial set up
-
-
-//************************************************//
-// the above are private methods
-//************************************************//
 
 public:
     string fileID;                                // number to form a file name
     schoolList() { clearUp(); }   // constructor: do nothing
     bool isEmpty() ;            // check if there is nothing
     void readF( string );               // read records from a file
+    void insertAVL();
     void clearUp() {            // erase the object content
         allR.clear();
         fileID.clear();
+        theAVLTree.clearUp();
         // remenber to build destructor
     } // end clearUp
 
@@ -77,7 +95,7 @@ int main() {
             if ( aList.isEmpty() )
                 cout << endl << "### Choose 1 first. ###";
             else {
-
+                aList.insertAVL();
             }
 
         } // else if
@@ -94,6 +112,55 @@ int main() {
 
     cout << "pause";
     return 0;
+}
+
+//-----------------------------------------------------------------------------------
+void AVLTree :: intsertAVL( nodeType* cur, schooltype newNode ) {
+    if ( root == NULL ) {
+        root = new nodeType;
+        root->key.push_back(newNode);
+    }
+    else if ( newNode.nstud == cur->key[0].nstud ){
+        cur->key.push_back(newNode);
+    }
+    else if ( newNode.nstud > cur->key[0].nstud ) {
+        if ( cur->rchild == NULL ) {
+            cur->rchild = new nodeType;
+            cur->rchild->key.push_back(newNode);
+        }
+        else
+            intsertAVL( cur->rchild, newNode );
+    }
+    else if ( newNode.nstud < cur->key[0].nstud ) {
+        if ( cur->lchild == NULL ) {
+            cur->lchild = new nodeType;
+            cur->lchild->key.push_back(newNode);
+        }
+        else
+            intsertAVL( cur->lchild, newNode );
+    }
+
+    
+}
+
+void AVLTree :: clearNode(nodeType* node) {
+    if (node == nullptr) {
+        return; // Base case: node is null
+    }
+
+    clearNode(node->lchild); // Delete left subtree
+    clearNode(node->rchild); // Delete right subtree
+
+    delete node; // Delete the current node
+}
+
+
+// schoolList-------------------------------------------------------------------------
+void schoolList ::insertAVL() {
+    for ( int i = 0; i < allR.size(); i++ ) {
+        theAVLTree.intsertAVL( theAVLTree.getRoot(), allR[i]);
+    }
+    return;
 }
 
 bool schoolList :: isEmpty() {
