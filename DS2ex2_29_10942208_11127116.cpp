@@ -167,13 +167,30 @@ void AVLTree :: intsertAVL( nodeType* cur, schooltype newNode ) {
 
     int balanceF = balanceFactor(cur);
 
+    if ( balanceF > 1 ){
+        balanceF = balanceFactor(cur->lchild);
+        if ( balanceF == 1 )
+            ;// LL
+        else
+            ;//LR
+
+    }
+    else if ( balanceF < -1 ){
+        balanceF = balanceFactor(cur->rchild);
+        if ( balanceF == -1 )
+            ; // RR
+        else
+            ; // RL
+    }
+
 
     return cur;
 
 }
 
 int AVLTree ::balanceFactor(nodeType* cur) {
-    
+    int right = getHeight(cur->rchild), left = getHeight(cur->lchild);
+    return right - left;
 }
 
 int AVLTree :: getHeight ( nodeType* node ) {
