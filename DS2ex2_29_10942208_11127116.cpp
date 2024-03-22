@@ -1,4 +1,4 @@
-// 11127116 曾詮淳 10942208 陳洺安
+// 11127116 ?�詮�? 10942208 ?�洺�?
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -18,13 +18,23 @@ struct schooltype {
     int ngrad;                      // number of school data
 };
 
+
 class threeTwoTree {
 	
 	struct nodeType {
 
     };
     
-}; // �G�T�� 
+}; //
+
+struct nodeType {
+    vector <schooltype> key;                  // search key
+    nodeType *lchild ;     // left child
+    nodeType *rchild ;     // right child
+    int height; // height of node
+    nodeType(schooltype newKey) : key({newKey}), lchild(NULL), rchild(NULL), height(1) {}
+};
+
 
 class AVLTree {
     struct nodeType {
@@ -35,6 +45,8 @@ class AVLTree {
 
     nodeType *root;
     void clearNode(nodeType* node);
+    int getHeight ( nodeType* node ) ;
+    int balanceFactor( nodeType* cur );
 
 public:
     AVLTree() : root(NULL) {}   // constructor of an empty tree
@@ -146,7 +158,29 @@ void AVLTree :: intsertAVL( nodeType* cur, schooltype newNode ) {
             intsertAVL( cur->lchild, newNode );
     }
 
+
+    int lHeight = getHeight(cur->lchild), rHeight = getHeight(cur->rchild);
+    if ( lHeight > rHeight )
+        cur->height = lHeight+1;
+    else
+        cur->height = rHeight+1;
+
+    int balanceF = balanceFactor(cur);
+
+
+    return cur;
+
+}
+
+int AVLTree ::balanceFactor(nodeType* cur) {
     
+}
+
+int AVLTree :: getHeight ( nodeType* node ) {
+    if ( node == NULL )
+        return 0;
+    else
+        return node->height;
 }
 
 void AVLTree :: clearNode(nodeType* node) {
