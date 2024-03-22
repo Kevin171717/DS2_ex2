@@ -18,14 +18,15 @@ struct schooltype {
     int ngrad;                      // number of school data
 };
 
-
+struct nodeType {
+    vector <schooltype> key;                  // search key
+    nodeType *lchild ;     // left child
+    nodeType *rchild ;     // right child
+    int height; // height of node
+    nodeType(schooltype newKey) : key({newKey}), lchild(NULL), rchild(NULL), height(1) {}
+};
 
 class AVLTree {
-    struct nodeType {
-        vector <schooltype> key;                  // search key
-        nodeType *lchild = NULL;     // left child
-        nodeType *rchild = NULL;     // right child
-    };
 
     nodeType *root;
     void clearNode(nodeType* node);
@@ -35,7 +36,13 @@ public:
     nodeType* getRoot (){
         return root;
     }
-    void intsertAVL( nodeType* cur ,schooltype allR );
+
+
+    nodeType* intsertAVL( nodeType* cur ,schooltype allR );
+
+    void setRoot( nodeType* newRoot ) {
+        root = newRoot;
+    } // renew the Root
 
     void clearUp() {                    // cut off the entire tree
         clearNode(root);
@@ -115,32 +122,19 @@ int main() {
 }
 
 //-----------------------------------------------------------------------------------
-void AVLTree :: intsertAVL( nodeType* cur, schooltype newNode ) {
-    if ( root == NULL ) {
-        root = new nodeType;
-        root->key.push_back(newNode);
-    }
-    else if ( newNode.nstud == cur->key[0].nstud ){
-        cur->key.push_back(newNode);
-    }
-    else if ( newNode.nstud > cur->key[0].nstud ) {
-        if ( cur->rchild == NULL ) {
-            cur->rchild = new nodeType;
-            cur->rchild->key.push_back(newNode);
-        }
-        else
-            intsertAVL( cur->rchild, newNode );
-    }
-    else if ( newNode.nstud < cur->key[0].nstud ) {
-        if ( cur->lchild == NULL ) {
-            cur->lchild = new nodeType;
-            cur->lchild->key.push_back(newNode);
-        }
-        else
-            intsertAVL( cur->lchild, newNode );
-    }
+nodeType* AVLTree :: intsertAVL( nodeType* cur, schooltype newNode ) {
+    if ( cur == NULL)
+        return (new nodeType ( newNode ));
 
-    
+    if ( cur->key[0].nstud == newNode.nstud )
+        cur->key.push_back(newNode);
+    else if ( cur->key[0].nstud > newNode.nstud )
+        cur->lchild = intsertAVL(cur->lchild, newNode);
+    else
+        cur->rchild = intsertAVL(cur->rchild, newNode);
+
+
+    return cur;
 }
 
 void AVLTree :: clearNode(nodeType* node) {
@@ -158,9 +152,8 @@ void AVLTree :: clearNode(nodeType* node) {
 // schoolList-------------------------------------------------------------------------
 void schoolList ::insertAVL() {
     for ( int i = 0; i < allR.size(); i++ ) {
-        theAVLTree.intsertAVL( theAVLTree.getRoot(), allR[i]);
+        theAVLTree.setRoot(theAVLTree.intsertAVL( theAVLTree.getRoot(), allR[i]));
     }
-    return;
 }
 
 bool schoolList :: isEmpty() {
