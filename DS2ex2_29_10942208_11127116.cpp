@@ -1,4 +1,4 @@
-// 11127116 曾詮淳 10942208 陳洺安
+// 11127116 ?�詮�? 10942208 ?�洺�?
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -26,10 +26,12 @@ struct nodeType {
     nodeType(schooltype newKey) : key({newKey}), lchild(NULL), rchild(NULL), height(1) {}
 };
 
+
 class AVLTree {
 
     nodeType *root;
     void clearNode(nodeType* node);
+    int getHeight ( nodeType* node ) ;
 
 public:
     AVLTree() : root(NULL) {}   // constructor of an empty tree
@@ -133,8 +135,21 @@ nodeType* AVLTree :: intsertAVL( nodeType* cur, schooltype newNode ) {
     else
         cur->rchild = intsertAVL(cur->rchild, newNode);
 
+    int lHeight = getHeight(cur->lchild), rHeight = getHeight(cur->rchild);
+    if ( lHeight > rHeight )
+        cur->height = lHeight+1;
+    else
+        cur->height = rHeight+1;
+    
 
     return cur;
+}
+
+int AVLTree :: getHeight ( nodeType* node ) {
+    if ( node == NULL )
+        return 0;
+    else
+        return node->height;
 }
 
 void AVLTree :: clearNode(nodeType* node) {
